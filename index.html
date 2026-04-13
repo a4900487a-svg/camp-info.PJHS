@@ -356,6 +356,7 @@ const TIME_COLOR={'暑假':'#23A5FA','寒假':'#73EFFA','學期中':'#8EFABA'};
 function getStripe(d){return GROUP_COLORS[d['類別']]||GROUP_COLORS['其他'];}
 function getStripeByGroup(g){return GROUP_COLORS[g]||GROUP_COLORS['其他'];}
 function getStatusClass(s){return s==='報名中'?'s-open':s==='即將截止'?'s-soon':'s-closed';}
+function isOpenDay(d){return (d['活動類型']||'').includes('OPEN DAY')||(d['類別']||'').includes('OPEN DAY');}
 
 let allData=[],currentFilter={type:'all',value:''},tagFilter='全部',viewMode='card',currentItem=null,specialMode=null,LIVE_SPECIAL=null;
 
@@ -396,9 +397,9 @@ function getFiltered(){
         ||String(d['副類別-2']||'').trim()===currentFilter.value;
       if(!matchGroup) return false;
     }
-    if(currentFilter.type==='openday'){ if(!(d['活動類型']||'').includes('OPEN DAY')) return false; }
-    if(currentFilter.type==='opendayStatus'){ if(!(d['活動類型']||'').includes('OPEN DAY')) return false; if(d['報名狀態']!==currentFilter.value) return false; }
-    if(tagFilter==='OPEN DAY'){ if(!(d['活動類型']||'').includes('OPEN DAY')) return false; }
+    if(currentFilter.type==='openday'){ if(!isOpenDay(d)) return false; }
+    if(currentFilter.type==='opendayStatus'){ if(!isOpenDay(d)) return false; if(d['報名狀態']!==currentFilter.value) return false; }
+    if(tagFilter==='OPEN DAY'){ if(!isOpenDay(d)) return false; }
     else if(tagFilter!=='全部'){ if(d['報名狀態']!==tagFilter) return false; }
     if(q && !d['活動名稱'].toLowerCase().includes(q) && !(d['主辦學校']||'').toLowerCase().includes(q)) return false;
     return true;
@@ -436,7 +437,7 @@ function renderCard(d,i){
     var s2=getStripeByGroup(String(d['副類別-2']).trim());
     subBadges+='<span class="type-badge" style="background:'+s2+'22;color:'+s2+';opacity:0.85;">'+String(d['副類別-2']).trim()+'</span>';
   }
-  const typeBadge=(d['活動類型']||'').includes('OPEN DAY')
+  const typeBadge=isOpenDay(d)
     ?'<span class="type-badge" style="background:#23A5FA22;color:#0A7AC4;">🏛️ OPEN DAY</span>'
     :'<span class="type-badge" style="background:'+stripe+'22;color:'+stripe+'">'+(d['類別']||'其他')+'</span>';
   const statusBadge=status?'<span class="status-badge '+getStatusClass(status)+'">'+status+'</span>':'';
@@ -462,7 +463,7 @@ function renderListItem(d,i){
   const stripe=getStripe(d);
   const tc=TIME_COLOR[d['時間']]||'#9CA3AF';
   const status=d['報名狀態']&&d['報名狀態']!=='undefined'?d['報名狀態']:'';
-  const typeBadge=(d['活動類型']||'').includes('OPEN DAY')
+  const typeBadge=isOpenDay(d)
     ?'<span class="type-badge" style="background:#23A5FA22;color:#0A7AC4;">🏛️ OPEN DAY</span>'
     :'<span class="type-badge" style="background:'+stripe+'22;color:'+stripe+'">'+(d['類別']||'其他')+'</span>';
   const statusBadge=status?'<span class="status-badge '+getStatusClass(status)+'">'+status+'</span>':'';
@@ -601,7 +602,7 @@ function openDetail(idx){
   var stripe=getStripe(d);
   var tc=TIME_COLOR[d['時間']]||'#9CA3AF';
   document.getElementById('modalStripe').style.background=stripe;
-  var typeBadge=(d['活動類型']||'').includes('OPEN DAY')
+  var typeBadge=isOpenDay(d)
     ?'<span class="type-badge" style="background:#23A5FA22;color:#0A7AC4;">🏛️ OPEN DAY</span>'
     :'<span class="type-badge" style="background:'+stripe+'22;color:'+stripe+'">'+(d['類別']||'其他')+'</span>';
   var rawMStatus=String(d['報名狀態']||'').trim();
