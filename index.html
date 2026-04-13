@@ -186,14 +186,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     <div class="logo-sub">平鎮高中 · 營隊資訊</div>
   </div>
   <div class="home-btn" onclick="goHome()">
-    <span>🏠</span><span>回首頁（所有營隊）</span>
+    <span>🏠</span><span>回首頁</span>
   </div>
   <div class="sidebar-scroll">
-    <div class="nav-section" id="sec-all" style="margin-top:10px;">
-      <div class="nav-section-hdr" onclick="filterBy('all','');setActiveHdr(this)">
-        <div class="nav-label"><div class="nav-icon ni-o">📋</div>所有營隊</div>
-      </div>
-    </div>
     <div class="nav-section open" id="sec-time">
       <div class="nav-section-hdr" onclick="toggleSec('time')">
         <div class="nav-label"><div class="nav-icon ni-b">📅</div>時間</div>
@@ -207,7 +202,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     </div>
     <div class="nav-section" id="sec-group">
       <div class="nav-section-hdr" onclick="toggleSec('group')">
-        <div class="nav-label"><div class="nav-icon ni-g">🎓</div>各學群營隊</div>
+        <div class="nav-label"><div class="nav-icon ni-g">🎓</div>醫學群查詢</div>
         <span class="chevron">▶</span>
       </div>
       <div class="nav-dropdown">
@@ -235,6 +230,11 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     <div class="nav-section" id="sec-openday">
       <div class="nav-section-hdr" onclick="filterBy('openday','OPEN DAY');setActiveHdr(this)">
         <div class="nav-label"><div class="nav-icon ni-b">🏛️</div>大學校園OPEN DAY</div>
+      </div>
+    </div>
+    <div class="nav-section" id="sec-university">
+      <div class="nav-section-hdr" onclick="filterBy('group','大學活動');setActiveHdr(this)">
+        <div class="nav-label"><div class="nav-icon ni-g">🎓</div>大學活動</div>
       </div>
     </div>
     <div class="special-section" id="sec-special" style="margin:6px 0;">
