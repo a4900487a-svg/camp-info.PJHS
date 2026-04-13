@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>平鎮高中 校外大學活動資訊</title>
+<title>平鎮高中 校外營隊資訊</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -182,8 +182,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <div class="logo-badge">🏕️ 校外大學活動資訊</div>
-    <div class="logo-sub">平鎮高中</div>
+    <div class="logo-badge">🏕️ 校外營隊</div>
+    <div class="logo-sub">平鎮高中 · 營隊資訊</div>
   </div>
   <div class="home-btn" onclick="goHome()">
     <span>🏠</span><span>回首頁（所有營隊）</span>
@@ -265,7 +265,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 <div class="main">
   <div class="topbar">
     <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-    <div class="topbar-title">平鎮高中 校外<span>大學活動</span>資訊</div>
+    <div class="topbar-title">校外<span>營隊</span>資訊</div>
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" placeholder="搜尋營隊名稱、主辦學校…" oninput="renderAll()">
@@ -356,7 +356,6 @@ const TIME_COLOR={'暑假':'#23A5FA','寒假':'#73EFFA','學期中':'#8EFABA'};
 function getStripe(d){return GROUP_COLORS[d['類別']]||GROUP_COLORS['其他'];}
 function getStripeByGroup(g){return GROUP_COLORS[g]||GROUP_COLORS['其他'];}
 function getStatusClass(s){return s==='報名中'?'s-open':s==='即將截止'?'s-soon':'s-closed';}
-function isOpenDay(d){return (d['活動類型']||'').includes('OPEN DAY')||(d['類別']||'').includes('OPEN DAY');}
 
 let allData=[],currentFilter={type:'all',value:''},tagFilter='全部',viewMode='card',currentItem=null,specialMode=null,LIVE_SPECIAL=null;
 
@@ -386,12 +385,19 @@ const DEMO_SPECIAL={
 };
 
 // ===== FILTER =====
+function isOpenDay(d){
+  // 判斷是否為 OPEN DAY：類別或活動類型包含 OPEN DAY
+  var cat=String(d['類別']||'').trim();
+  var atype=String(d['活動類型']||'').trim();
+  return cat.indexOf('OPEN DAY')>=0 || cat.indexOf('OPEN')>=0
+    || atype.indexOf('OPEN DAY')>=0 || atype.indexOf('OPEN')>=0;
+}
+
 function getFiltered(){
   const q=document.getElementById('searchInput').value.trim().toLowerCase();
   return allData.filter(function(d){
     if(currentFilter.type==='time' && d['時間']!==currentFilter.value) return false;
     if(currentFilter.type==='group'){
-      // 主類別 或 副類別-1 或 副類別-2 任一符合即顯示
       var matchGroup=d['類別']===currentFilter.value
         ||String(d['副類別-1']||'').trim()===currentFilter.value
         ||String(d['副類別-2']||'').trim()===currentFilter.value;
