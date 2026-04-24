@@ -792,9 +792,9 @@ async function fetchAndRender(url){
     }
     // 支援兩種格式：純陣列 或 {camps, docs, news, alumni}
     if(Array.isArray(raw)){
-      allData=raw.filter(function(d){return d['活動名稱'];});
+      allData=raw.filter(function(d){return d['活動名稱'];}).reverse();
     } else {
-      allData=(raw.camps||raw.announcements||[]).filter(function(d){return d['活動名稱'];});
+      allData=(raw.camps||raw.announcements||[]).filter(function(d){return d['活動名稱'];}).reverse();
       // 更新第二教室資料
       if(raw.docs||raw.news||raw.alumni){
         LIVE_SPECIAL={
