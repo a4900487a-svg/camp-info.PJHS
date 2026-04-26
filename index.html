@@ -70,8 +70,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .view-toggle{display:flex;gap:3px;background:var(--bg);border-radius:7px;padding:3px;}
 .vbtn{width:29px;height:29px;border-radius:5px;border:none;background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.2s;}
 .vbtn.active{background:#fff;color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,0.1);}
-.setting-btn{padding:7px 13px;background:var(--primary);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;}
-.setting-btn:hover{opacity:0.85;}
 .subbar{padding:11px 26px 0;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
 .breadcrumb{font-size:12px;color:var(--muted);margin-right:6px;}
 .breadcrumb span{color:var(--primary);font-weight:700;}
@@ -145,24 +143,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .btn-signup:disabled{opacity:0.4;cursor:not-allowed;}
 .btn-close{padding:11px 16px;border-radius:999px;border:2px solid var(--border);background:transparent;font-size:12px;font-weight:700;font-family:'Noto Sans TC',sans-serif;cursor:pointer;color:var(--muted);transition:all 0.2s;}
 .btn-close:hover{border-color:var(--primary);color:var(--primary);}
-.pwd-overlay,.cfg-overlay{position:fixed;inset:0;z-index:200;background:rgba(28,35,51,0.75);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.3s;}
-.pwd-overlay.open,.cfg-overlay.open{opacity:1;pointer-events:all;}
-.pwd-modal,.cfg-modal{background:#fff;border-radius:20px;max-width:410px;width:100%;padding:28px;transform:translateY(20px);transition:transform 0.3s cubic-bezier(.34,1.56,.64,1);}
-.pwd-overlay.open .pwd-modal,.cfg-overlay.open .cfg-modal{transform:none;}
-.pwd-modal{text-align:center;}
-.pwd-lock{font-size:38px;margin-bottom:9px;}
-.pwd-modal h2,.cfg-modal h2{font-size:17px;font-weight:900;color:var(--text);margin-bottom:5px;}
-.pwd-modal p,.cfg-modal p{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;}
-.pwd-input,.cfg-input{width:100%;padding:10px 13px;border:2px solid var(--border);border-radius:9px;font-size:14px;font-family:'Noto Sans TC',sans-serif;outline:none;margin-bottom:7px;color:var(--text);transition:border 0.2s;}
-.pwd-input{text-align:center;letter-spacing:3px;}
-.pwd-input:focus,.cfg-input:focus{border-color:var(--primary);}
-.cfg-note{background:var(--primary-light);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--primary);line-height:1.7;margin-bottom:14px;}
-.pwd-error{font-size:12px;color:#DC2626;margin-bottom:9px;min-height:17px;font-weight:700;}
-.modal-btns{display:flex;gap:7px;}
-.btn-prim{flex:1;padding:10px;border-radius:999px;border:none;background:var(--primary);color:#fff;font-size:13px;font-weight:700;font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:opacity 0.2s;}
-.btn-prim:hover{opacity:0.85;}
-.btn-outl{padding:10px 14px;border-radius:999px;border:2px solid var(--border);background:transparent;font-size:12px;font-weight:700;font-family:'Noto Sans TC',sans-serif;cursor:pointer;color:var(--muted);transition:all 0.2s;}
-.btn-outl:hover{border-color:var(--primary);color:var(--primary);}
 .sidebar-overlay{display:none;position:fixed;inset:0;z-index:49;background:rgba(0,0,0,0.5);}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%);}
@@ -282,7 +262,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
       <button class="vbtn active" id="vbtn-card" onclick="setView('card')" title="卡片">⊞</button>
       <button class="vbtn" id="vbtn-list" onclick="setView('list')" title="列表">☰</button>
     </div>
-    <button class="setting-btn" onclick="openPwd()">⚙️ 設定</button>
   </div>
   <div class="subbar">
     <div class="breadcrumb">首頁 › <span id="bcText">所有營隊</span></div>
@@ -318,41 +297,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
     </div>
   </div>
 </div>
-<div class="pwd-overlay" id="pwdOverlay">
-  <div class="pwd-modal">
-    <div class="pwd-lock">🔐</div>
-    <h2>管理員驗證</h2>
-    <p>請輸入密碼以進入設定</p>
-    <input class="pwd-input" type="password" id="pwdInput" placeholder="輸入密碼" onkeydown="if(event.key==='Enter')checkPwd()">
-    <div class="pwd-error" id="pwdError"></div>
-    <div class="modal-btns">
-      <button class="btn-prim" onclick="checkPwd()">確認</button>
-      <button class="btn-outl" onclick="closePwd()">取消</button>
-    </div>
-  </div>
-</div>
-<div class="cfg-overlay" id="cfgOverlay" onclick="closeCfg(event)">
-  <div class="cfg-modal">
-    <h2>⚙️ 設定資料來源</h2>
-    <p>輸入 Google Apps Script 網址，網站即可自動載入營隊資料。</p>
-    <div class="cfg-note">
-      <strong>📌 Google Sheets 欄位（第一列為標題）：</strong><br>
-      活動名稱 ｜ 主辦學校 ｜ 類別 ｜ 時間（暑假/寒假/學期中）｜ 活動日期 ｜ 報名截止 ｜ 費用 ｜ 名額 ｜ 報名狀態 ｜ 活動說明 ｜ 報名連結<br><br>
-      <strong>類別</strong>填18學群名稱（如：資訊學群）或「其他」<br>
-      <strong>報名狀態</strong>填：報名中 / 即將截止 / 已截止
-    </div>
-    <label style="font-size:12px;font-weight:700;color:var(--text);display:block;margin-bottom:5px;">Apps Script 網址</label>
-    <input class="cfg-input" type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec">
-    <div class="modal-btns">
-      <button class="btn-prim" onclick="loadFromCfg()">載入資料</button>
-      <button class="btn-outl" onclick="loadDemo();closeCfgDirect()">示範資料</button>
-      <button class="btn-outl" onclick="closeCfgDirect()">取消</button>
-    </div>
-  </div>
-</div>
 
 <script>
-const ADMIN_PWD='PJHSguidance0325';
 let SCRIPT_URL='https://script.google.com/macros/s/AKfycbwNe9_5CogWUMhGo_ee7flG7Z1oWFm1QzS1ywWJXaPBNT3KJmBp2yoCWgeUkIeL6z0J/exec';
 
 const GROUP_COLORS={'資訊學群':'#23A5FA','工程學群':'#8EFABA','數理化學群':'#73EFFA','醫藥衛生學群':'#AAFAAF','生命科學學群':'#8EFADF','生物資源學群':'#6DD6A0','地球與環境學群':'#23A5FA','建築與設計學群':'#8EFABA','藝術學群':'#73EFFA','社會與心理學群':'#DEFAF3','大眾傳播學群':'#8EFADF','外語學群':'#AAFAAF','文史哲學群':'#73EFFA','教育學群':'#8EFABA','法政學群':'#DEFAF3','管理學群':'#23A5FA','財經學群':'#AAFAAF','遊憩與運動學群':'#8EFADF','其他':'#A0E4D4'};
@@ -391,11 +337,10 @@ const DEMO_SPECIAL={
 
 // ===== FILTER =====
 function isOpenDay(d){
-  // 判斷是否為 OPEN DAY：類別或活動類型包含 OPEN DAY
-  var cat=String(d['類別']||'').trim();
-  var atype=String(d['活動類型']||'').trim();
-  return cat.indexOf('OPEN DAY')>=0 || cat.indexOf('OPEN')>=0
-    || atype.indexOf('OPEN DAY')>=0 || atype.indexOf('OPEN')>=0;
+  var cat=String(d['類別']||'').trim().replace(/\s+/g,' ').toUpperCase();
+  var atype=String(d['活動類型']||'').trim().replace(/\s+/g,' ').toUpperCase();
+  return cat.indexOf('OPEN DAY')>=0||cat.indexOf('OPENDAY')>=0
+    ||atype.indexOf('OPEN DAY')>=0||atype.indexOf('OPENDAY')>=0;
 }
 
 function getFiltered(){
@@ -740,35 +685,6 @@ function closeSidebar(){
   document.getElementById('sidebarOverlay').classList.remove('open');
 }
 
-// ===== PASSWORD =====
-function openPwd(){
-  document.getElementById('pwdInput').value='';
-  document.getElementById('pwdError').textContent='';
-  document.getElementById('pwdOverlay').classList.add('open');
-  setTimeout(function(){document.getElementById('pwdInput').focus();},300);
-}
-function checkPwd(){
-  if(document.getElementById('pwdInput').value===ADMIN_PWD){
-    document.getElementById('pwdOverlay').classList.remove('open');
-    document.getElementById('cfgOverlay').classList.add('open');
-    document.getElementById('cfgUrl').value=SCRIPT_URL;
-  } else {
-    document.getElementById('pwdError').textContent='❌ 密碼錯誤';
-    document.getElementById('pwdInput').value='';
-    document.getElementById('pwdInput').focus();
-  }
-}
-function closePwd(){document.getElementById('pwdOverlay').classList.remove('open');}
-
-// ===== CONFIG =====
-function closeCfg(e){if(e.target===document.getElementById('cfgOverlay'))closeCfgDirect();}
-function closeCfgDirect(){document.getElementById('cfgOverlay').classList.remove('open');}
-async function loadFromCfg(){
-  var url=document.getElementById('cfgUrl').value.trim();
-  if(!url){loadDemo();closeCfgDirect();return;}
-  SCRIPT_URL=url;closeCfgDirect();
-  await fetchAndRender(url);
-}
 function fetchJSONP(url){
   return new Promise(function(resolve,reject){
     var cb='campCb_'+Date.now();
@@ -816,8 +732,6 @@ async function fetchAndRender(url){
     document.getElementById('resultCount').textContent='';
   }
 }
-function loadDemo(){allData=DEMO.slice();renderAll();}
-
 // ===== INIT =====
 (async function(){
   await fetchAndRender(SCRIPT_URL);
